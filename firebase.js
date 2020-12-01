@@ -21,5 +21,4 @@ export const fb = firebase.initializeApp(firebaseConfig);
 
 export const db = firebase.firestore();
 export const dbMenuAdd = db.collection('menuItems');
-
 export const dbOrders = db.collection('orderItems');

@@ -117,6 +117,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 export default {
   data() {
     return {
+      number:[],
       show: false,
     };
   },

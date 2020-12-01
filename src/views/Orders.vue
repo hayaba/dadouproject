@@ -81,15 +81,28 @@
               <tbody class="font-weight-light">
                 <tr v-for="item in orderItems" :key="item.name">
                   <td>
-                    {{ item.orderNumber }}
+                    {{ item.orderNumbeer }}
                   </td>
-                  <td v-for="subitem in item.orderLines" :key="subitem.id"> {{ subitem.quantity }}</td>
-                  <td v-for="subitem in item.orderLines" :key="subitem.id">{{ subitem.name }}</td>
-                  <td v-for="subitem in item.orderLines" :key="subitem.id">{{ subitem.price }}</td>
+                  <td class="py-3">
+                    <p v-for="subitem in item.orderLines" :key="subitem.id">
+                      {{ subitem.quantity }}
+                    </p>
+                  </td>
+                  <td class="py-3">
+                    <p v-for="subitem in item.orderLines" :key="subitem.id">
+                      {{ subitem.name }}
+                    </p>
+                  </td>
+                  <td class="py-3">
+                    <p v-for="subitem in item.orderLines" :key="subitem.id">
+                      {{ subitem.price }}
+                    </p>
+                  </td>
                   <td>
                     <div
                       id="status_box"
-                      v-bide:class="item.status" @click="switchStage(item.id)"
+                      v-bind:class="item.status"
+                      @click="switchStage(item.id)"
                     >
                       {{ item.status }}
                     </div>
@@ -99,7 +112,7 @@
                       color="gray darken-1"
                       small
                       text
-                      @click="increaseQtn(item)"
+                      @click="archiveOrderItem(item.id)"
                     >
                       <v-icon>mdi-package-down </v-icon></v-btn
                     >
@@ -125,7 +138,9 @@
         <v-sheet class="pa-2 mb-2" rounded="lg">
           <h2 id="title" class="font-weight-light">Revenue</h2>
           <v-divider class="my-3"></v-divider>
-          <v-row class="pa-4"> Revenue </v-row>
+          <v-row class="pa-4"> <b> Completed Orders:</b></v-row>
+          <div><p id="totalOrders">Total Orders: <span class="red--text text--lighten-1">{{orderItems.length}}</span></p></div>
+          <div id="revenueList"></div>
         </v-sheet>
 
         <v-sheet min-height="70vh" class="pa-2" rounded="lg">
@@ -143,36 +158,46 @@ export default {
   beforeCreate() {
     this.$store.dispatch("setOrderItems");
   },
-   methods: {
+  methods: {
     switchStage(id) {
-      let selectedOrderItem = this.orderItems.filter(item => item.id === id)[0];
+      let selectedOrderItem = this.orderItems.filter(
+        (item) => item.id === id
+      )[0];
 
-      if (selectedOrderItem.status === "In-Progress") {
+      if (selectedOrderItem.status === "inprogress") {
         dbOrders
           .doc(id)
           .update({ status: "complete" })
           .then(() => {});
-      } else if (selectedOrderItem.status === "Not Started") {
+      } else if (selectedOrderItem.status === "incomplete") {
         dbOrders
           .doc(id)
-          .update({ status: "In-Progress" })
+          .update({ status: "inprogress" })
           .then(() => {});
-      } else if (selectedOrderItem.status === "Completed") {
+      } else if (selectedOrderItem.status === "complete") {
         dbOrders
           .doc(id)
-          .update({ status: "Not Started" })
+          .update({ status: "incomplete" })
           .then(() => {});
       }
+    },
+    archiveOrderItem(id) {
+      dbOrders
+        .doc(id)
+        .update({ archive: true, storeOrder: true })
+        .then(() => {
+          console.log("Order is archived");
+        });
     },
     deleteOrderItem(id) {
       dbOrders
         .doc(id)
         .delete()
         .then(() => {
-          console.log("Stuff is deleted");
+          console.log("Order is deleted");
         })
-            // eslint-disable-next-line no-unused-vars  
-        .catch(error => {});
+        // eslint-disable-next-line no-unused-vars
+        .catch((error) => {});
     },
   },
   computed: {
@@ -189,6 +214,6 @@ export default {
 }
 #status_box {
   border-radius: 2px;
-  color: white;
+  // color: white;
 }
 </style>

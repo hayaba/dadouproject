@@ -114,7 +114,6 @@ export default {
   },
   beforeCreate() {
     this.$store.dispatch("setMenuItems");
-    this.$store.dispatch("setFavItems");
   },
   /* created() {
     dbMenuAdd.get().then((querySanpshot) => {

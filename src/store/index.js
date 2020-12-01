@@ -57,11 +57,10 @@ export default new Vuex.Store({
     },
     addCheckoutItem: (state, basketItems) => {
      dbOrders.add({
-       archieve: false,
+       archive: false,
        storeOrder: false,
        orderNumbeer: state.counter++,
-       orderNumber: 2,
-       status: "not started",
+       status: "incomplete",
        orderLines: state.basketItems
      })
     },
@@ -100,12 +99,11 @@ export default new Vuex.Store({
           })
         })
         state.favItems = favItems
-
       })
     },
     setOrderItems: state => {
       let orderItems = []
-      dbOrder.onSnapshot((SnapshotItems) => {
+      dbOrders.onSnapshot((SnapshotItems) => {
         orderItems = []
         SnapshotItems.forEach((doc) => {
           var orderItemData = doc.data();
@@ -115,12 +113,11 @@ export default new Vuex.Store({
           })
         })
         state.orderItems = orderItems
-
       })
     },
   },
   actions: {
-    setCheckoutItems(context) {
+    setCheckoutItem(context) {
       context.commit('addCheckoutItem')
     },
     setUser(context, user) {
@@ -143,7 +140,7 @@ export default new Vuex.Store({
     getFavItems: state => state.favItems,
     currentUser: state => state.currentUser,
     getMenuItems: state => state.menuItems,
-    getOrderItems: state => state.OrderItems
+    getOrderItems: state => state.orderItems
   }
 }
 )

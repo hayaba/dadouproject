@@ -79,7 +79,7 @@
                   </v-card-title>
 
             <v-card-subtitle class="pb-0" id="item-price">
-              {{ price }}
+              {{ price }} kr
             </v-card-subtitle>
 
             <v-card-text class="text--primary" id="item-description">
